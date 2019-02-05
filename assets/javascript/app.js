@@ -1,78 +1,143 @@
- // VARIABLES
-    // ==========================================================================
+var card = $("#questions");
 
-    // The array of questions for our quiz game.
-    var questions = [
-        { q: "The sky is blue.", a: "t" },
-        { q: "There are 365 days in a year.", a: "t" },
-        { q: "There are 42 ounces in a pound.", a: "f" },
-        { q: "The Declaration of Independence was created in 1745.", a: "f" },
-        { q: "Bananas are vegetables.", a: "f" }
-      ];
-  
-      // We start the game with a score of 0.
-      var score = 0;
-      // Variable to hold the index of current question.
-      var questionIndex = 0;
-  
-      // FUNCTIONS
-      // ==============================================================================
-  
-      // Function to render questions.
-      function renderQuestion() {
-        // If there are still more questions, render the next one.
-        if (questionIndex <= (questions.length - 1)) {
-          document.querySelector("#question").innerHTML = questions[questionIndex].q;
-        }
-        // If there aren't, render the end game screen.
-        else {
-          document.querySelector("#question").innerHTML = "Game Over!";
-          document.querySelector("#score").innerHTML = "Final Score: " + score + " out of " + questions.length;
-        }
+var questions = [{
+  question: "How tall is the tallest person?",
+  answers: ["10 ft", "6.5 ft", "8.25 ft", "9.1 ft"],
+  correctAnswer: "8.25ft"
+}, {
+  question: "How long is the longest breath held under water?",
+  answers: ["4.5 min", "15 min", "31 min", "24.3 min"],
+  correctAnswer: "24.3min"
+}, {
+  question: "Who is the fastest person in the world?",
+  answers: ["Jackie Joyner Kersee", "Usain Bolt", "Yojan Blake", "Michael Johnson"],
+  correctAnswer: "Usain Bolt"
+}, {
+  question: "How short is the shortest person in the world?",
+  answers: ["25 inch.", "36 inch.", "28 inch.", "18 inch."],
+  correctAnswer: "25 inch."
+}, {
+  question: "Who has won the most Olympic gold medals?",
+  answers: ["Larisa Latynina", "Mark Spitz", "Michael Phelps", "Serena Williams"],
+  correctAnswer: "Michael Phelps"
+}];
+
+var timer;
+
+var game = {
+
+  correct: 0,
+  incorrect: 0,
+  counter: 60,
+
+  countdown: function() {
+    game.counter--;
+    $("#counter-number").html(game.counter);
+    if (game.counter === 0) {
+      game.done();
+    }
+  },
+
+  start: function() {
+    timer = setInterval(game.countdown, 1000);
+
+    $("#sub-wrapper").prepend("<h2>Time Remaining: <span id='counter-number'>60</span> Seconds</h2>");
+
+    $("#start").remove();
+
+    for (var i = 0; i < questions.length; i++) {
+      card.append("<h2>" + questions[i].question + "</h2>");
+      for (var j = 0; j < questions[i].answers.length; j++) {
+        card.append("<input type='radio' name='question-" + i +
+        "' value='" + questions[i].answers[j] + "''>" + questions[i].answers[j]);
       }
-  
-      // Function that updates the score...
-      function updateScore() {
-        document.querySelector("#score").innerHTML = "Score: " + score;
-      }
-  
-  
-      // MAIN PROCESS
-      // ==============================================================================
-  
-      // Calling functions to start the game.
-      renderQuestion();
-      updateScore();
-  
-      // When the user presses a key, it will run the following function...
-      document.onkeyup = function(event) {
-  
-        // If there are no more questions, stop the function.
-        if (questionIndex === questions.length) {
-          return;
-        }
-  
-        // Determine which key was pressed, make it lowercase, and set it to the userInput variable.
-        var userInput = event.key.toLowerCase();
-  
-        // Only run this code if "t" or "f" were pressed.
-        if (userInput === "t" || userInput === "f") {
-  
-          // If they guess the correct answer, increase and update score, alert them they got it right.
-          if (userInput === questions[questionIndex].a) {
-            alert("Correct!");
-            score++;
-            updateScore();
-          }
-          // If wrong, alert them they are wrong.
-          else {
-            alert("Wrong!");
-          }
-  
-          // Increment the questionIndex variable and call the renderQuestion function.
-          questionIndex++;
-          renderQuestion();
-  
-        }
-  
-      };
+    }
+
+    card.append("<button id='done'>Done</button>");
+  },
+
+
+
+done: function() {
+
+$.each($("input[name='question-0']:checked"), function() {
+  if ($(this).val() === questions[0].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+$.each($("input[name='question-1']:checked"), function() {
+  if ($(this).val() === questions[1].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+$.each($("input[name='question-2']:checked"), function() {
+  if ($(this).val() === questions[2].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+$.each($("input[name='question-3']:checked"), function() {
+  if ($(this).val() === questions[3].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+$.each($("input[name='question-4']:checked"), function() {
+  if ($(this).val() === questions[4].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+$.each($("input[name='question-5']:checked"), function() {
+  if ($(this).val() === questions[5].correctAnswer) {
+    game.correct++;
+  }
+  else {
+    game.incorrect++;
+  }
+});
+
+
+this.result();
+},
+
+result: function() {
+
+clearInterval(timer);
+
+$("#sub-wrapper h2").remove();
+
+card.html("<h2>How'd you do?!</h2>");
+card.append("<h3>Correct Answers: " + this.correct + "</h3>");
+card.append("<h3>Incorrect Answers: " + this.incorrect + "</h3>");
+card.append("<h3>Unanswered: " + (questions.length - (this.incorrect + this.correct)) + "</h3>");
+}
+};
+
+
+
+$(document).on("click", "#start", function() {
+game.start();
+});
+
+
+$(document).on("click", "#done", function() {
+game.done();
+});
