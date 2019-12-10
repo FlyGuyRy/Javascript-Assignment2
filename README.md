@@ -1,4 +1,4 @@
-# Timed Trivia
+# Trivia Time Trials
 
 https://flyguyry.github.io/TriviaGame/
 
